@@ -61,5 +61,21 @@ void main() {
       );
       expect(carry, 0);
     });
+
+    test('since excludes already-swept weeks (savings mode)', () {
+      // Two past weeks with surplus, but counting only from the 2nd one.
+      final expenses = [
+        _exp('a', 12000, DateTime(2024, 6, 5)), // week of Mon 2024-06-03
+        _exp('b', 15000, DateTime(2024, 6, 12)), // week of Mon 2024-06-10
+      ];
+      final fromSecondWeek = WeeklyRollover.carryover(
+        expenses: expenses,
+        weeklyAllowance: 20000,
+        now: now,
+        since: DateTime(2024, 6, 10),
+      );
+      // Only week of 06-10 counts: 20000 - 15000 = 5000.
+      expect(fromSecondWeek, 5000);
+    });
   });
 }
