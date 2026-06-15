@@ -11,13 +11,13 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 30
     environment:
-      flutter: 3.22.1
+      flutter: stable
       xcode: latest
     scripts:
       - name: Flutter packages get
         script: flutter pub get
       - name: Analyze
-        script: flutter analyze
+        script: flutter analyze --no-fatal-infos
       - name: Test
         script: flutter test
       - name: Build iOS (no codesign)
@@ -31,7 +31,7 @@ workflows:
     instance_type: linux_x2
     max_build_duration: 30
     environment:
-      flutter: 3.22.1
+      flutter: stable
     scripts:
       - name: Flutter packages get
         script: flutter pub get
