@@ -11,7 +11,7 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 30
     environment:
-      flutter: stable
+      flutter: 3.22.1
       xcode: latest
     scripts:
       - name: Flutter packages get
@@ -31,7 +31,7 @@ workflows:
     instance_type: linux_x2
     max_build_duration: 30
     environment:
-      flutter: stable
+      flutter: 3.22.1
     scripts:
       - name: Flutter packages get
         script: flutter pub get
@@ -50,7 +50,7 @@ workflows:
 #      ios_signing:
 #        distribution_type: app_store
 #        bundle_identifier: com.drwintech.moneytrack
-#      flutter: stable
+#      flutter: 3.22.1
 #    scripts:
 #      - flutter pub get
 #      - flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
