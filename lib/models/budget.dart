@@ -11,6 +11,7 @@ class Budget extends HiveObject {
     required this.percentages,
     this.savingsPercent = 10,
     this.weeklyBudget = 0,
+    this.weeklyRollover = false,
   });
 
   /// categoryId -> percentage of salary (0..100).
@@ -25,6 +26,10 @@ class Budget extends HiveObject {
   /// allocation. Any value `> 0` overrides that and is used as-is.
   final double weeklyBudget;
 
+  /// When true, the unspent (or overspent) amount of past weeks carries over to
+  /// the current week's allowance.
+  final bool weeklyRollover;
+
   bool get hasManualWeeklyBudget => weeklyBudget > 0;
 
   double percentFor(ExpenseCategory category) => percentages[category.id] ?? 0;
@@ -37,11 +42,13 @@ class Budget extends HiveObject {
     Map<int, double>? percentages,
     double? savingsPercent,
     double? weeklyBudget,
+    bool? weeklyRollover,
   }) {
     return Budget(
       percentages: percentages ?? Map<int, double>.from(this.percentages),
       savingsPercent: savingsPercent ?? this.savingsPercent,
       weeklyBudget: weeklyBudget ?? this.weeklyBudget,
+      weeklyRollover: weeklyRollover ?? this.weeklyRollover,
     );
   }
 

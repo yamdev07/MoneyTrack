@@ -20,18 +20,21 @@ class BudgetAdapter extends TypeAdapter<Budget> {
       ),
       savingsPercent: (fields[1] as num?)?.toDouble() ?? 10,
       weeklyBudget: (fields[2] as num?)?.toDouble() ?? 0,
+      weeklyRollover: (fields[3] as bool?) ?? false,
     );
   }
 
   @override
   void write(BinaryWriter writer, Budget obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.percentages)
       ..writeByte(1)
       ..write(obj.savingsPercent)
       ..writeByte(2)
-      ..write(obj.weeklyBudget);
+      ..write(obj.weeklyBudget)
+      ..writeByte(3)
+      ..write(obj.weeklyRollover);
   }
 }

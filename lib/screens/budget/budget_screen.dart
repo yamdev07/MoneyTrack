@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_colors.dart';
 import '../../core/budget_calculator.dart';
 import '../../core/money.dart';
+import '../../core/weekly_rollover.dart';
 import '../../models/expense_category.dart';
 import '../../state/budget_controller.dart';
 import '../../state/expense_controller.dart';
@@ -91,8 +92,18 @@ class BudgetScreen extends StatelessWidget {
     );
     final rows = calc.categories();
     final weeklySpent = expenses.weekTotal;
+
+    final baseWeekly = calc.weeklyBudgetTotal;
+    final carryover = budget.weeklyRollover
+        ? WeeklyRollover.carryover(
+            expenses: expenses.all,
+            weeklyAllowance: baseWeekly,
+            now: DateTime.now(),
+          )
+        : 0.0;
+    final effectiveWeekly = baseWeekly + carryover;
     final weeklyRatio =
-        calc.weeklyBudgetTotal > 0 ? weeklySpent / calc.weeklyBudgetTotal : 0.0;
+        effectiveWeekly > 0 ? weeklySpent / effectiveWeekly : 0.0;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Budget')),
@@ -100,14 +111,26 @@ class BudgetScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
                 _WeeklyCard(
-                  budget: calc.weeklyBudgetTotal,
+                  budget: effectiveWeekly,
                   spent: weeklySpent,
                   ratio: weeklyRatio,
                   currency: currency,
                   isManual: budget.hasManualWeeklyBudget,
+                  carryover: budget.weeklyRollover ? carryover : null,
                   onEdit: () => _editWeeklyBudget(context),
                 ),
-                const SizedBox(height: 20),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: budget.weeklyRollover,
+                  onChanged: (v) =>
+                      context.read<BudgetController>().setWeeklyRollover(v),
+                  title: const Text('Reporter le reste sur la semaine suivante'),
+                  subtitle: const Text(
+                    'Le surplus (ou le dépassement) des semaines passées s\'ajoute',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                const SizedBox(height: 12),
                 if (!profile.hasSalary)
                   const _NoSalaryHint()
                 else ...[
@@ -156,6 +179,7 @@ class _WeeklyCard extends StatelessWidget {
     required this.currency,
     required this.isManual,
     required this.onEdit,
+    this.carryover,
   });
 
   final double budget;
@@ -164,6 +188,9 @@ class _WeeklyCard extends StatelessWidget {
   final String currency;
   final bool isManual;
   final VoidCallback onEdit;
+
+  /// Carried-over amount from past weeks, or null when rollover is off.
+  final double? carryover;
 
   @override
   Widget build(BuildContext context) {
@@ -214,6 +241,21 @@ class _WeeklyCard extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
+              if (carryover != null && carryover!.abs() >= 1) ...[
+                const SizedBox(height: 2),
+                Text(
+                  carryover! >= 0
+                      ? 'dont report +${Money.format(carryover!, currency)}'
+                      : 'dont report ${Money.format(carryover!, currency)}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: carryover! >= 0
+                        ? AppColors.income
+                        : AppColors.danger,
+                  ),
+                ),
+              ],
               const SizedBox(height: 12),
               ProgressBar(
                 value: ratio,
