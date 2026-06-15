@@ -61,8 +61,11 @@ class BudgetCalculator {
   /// Total monthly money allocated to spending categories.
   double get monthlyBudgetTotal => salary * budget.totalAllocatedPercent / 100;
 
-  double get weeklyBudgetTotal =>
-      monthlyBudgetTotal / AppConstants.weeksPerMonth;
+  /// Weekly allowance: the user's manual amount when set, otherwise derived
+  /// from the monthly allocation.
+  double get weeklyBudgetTotal => budget.hasManualWeeklyBudget
+      ? budget.weeklyBudget
+      : monthlyBudgetTotal / AppConstants.weeksPerMonth;
 
   /// Amount earmarked for savings each month.
   double get monthlySavingsTarget => salary * budget.savingsPercent / 100;
