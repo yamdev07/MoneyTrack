@@ -7,7 +7,11 @@ import 'expense_category.dart';
 /// Percentages are stored per [ExpenseCategory.id]. They do not have to sum to
 /// 100 — the remainder is treated as un-allocated / free money.
 class Budget extends HiveObject {
-  Budget({required this.percentages, this.savingsPercent = 10});
+  Budget({
+    required this.percentages,
+    this.savingsPercent = 10,
+    this.weeklyBudget = 0,
+  });
 
   /// categoryId -> percentage of salary (0..100).
   final Map<int, double> percentages;
@@ -15,16 +19,29 @@ class Budget extends HiveObject {
   /// Percentage of salary automatically earmarked for savings.
   final double savingsPercent;
 
+  /// Manual weekly spending allowance set by the user.
+  ///
+  /// `0` means "automatic": the weekly budget is derived from the monthly
+  /// allocation. Any value `> 0` overrides that and is used as-is.
+  final double weeklyBudget;
+
+  bool get hasManualWeeklyBudget => weeklyBudget > 0;
+
   double percentFor(ExpenseCategory category) => percentages[category.id] ?? 0;
 
   /// Total percentage allocated to spending categories (excludes savings).
   double get totalAllocatedPercent =>
       percentages.values.fold(0.0, (sum, value) => sum + value);
 
-  Budget copyWith({Map<int, double>? percentages, double? savingsPercent}) {
+  Budget copyWith({
+    Map<int, double>? percentages,
+    double? savingsPercent,
+    double? weeklyBudget,
+  }) {
     return Budget(
       percentages: percentages ?? Map<int, double>.from(this.percentages),
       savingsPercent: savingsPercent ?? this.savingsPercent,
+      weeklyBudget: weeklyBudget ?? this.weeklyBudget,
     );
   }
 
