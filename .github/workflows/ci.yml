@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: {}
 
 jobs:
   analyze-and-test:
@@ -12,12 +13,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Show build context (freshness marker)
+        run: |
+          echo "Commit analysed: ${GITHUB_SHA}"
+          echo "Ref: ${GITHUB_REF}"
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
 
+      - name: Flutter version
+        run: flutter --version
+
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Assert source is up to date (no CardTheme, no withOpacity)
+        run: |
+          ! grep -rn "CardTheme(" lib/
+          ! grep -rn "withOpacity" lib/
 
       # Deprecation hints (e.g. withOpacity) on newer Flutter are informational
       # and must not fail the build. Code is also kept valid on Flutter 3.22.
