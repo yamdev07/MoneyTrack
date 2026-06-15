@@ -1,19 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-/// Root widget of the MoneyTrack application.
-///
-/// Wiring (theme, providers, routes) is added incrementally on top of this
-/// minimal shell as features land.
+import 'core/app_constants.dart';
+import 'core/app_theme.dart';
+import 'data/budget_repository.dart';
+import 'data/expense_repository.dart';
+import 'data/profile_repository.dart';
+import 'data/savings_repository.dart';
+import 'state/budget_controller.dart';
+import 'state/expense_controller.dart';
+import 'state/profile_controller.dart';
+import 'state/savings_controller.dart';
+
+/// Root widget: wires repositories, controllers, theme and the home screen.
 class MoneyTrackApp extends StatelessWidget {
   const MoneyTrackApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MoneyTrack',
-      debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(child: Text('MoneyTrack')),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProfileController(ProfileRepository()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ExpenseController(ExpenseRepository()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BudgetController(BudgetRepository()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SavingsController(SavingsRepository()),
+        ),
+      ],
+      child: MaterialApp(
+        title: AppConstants.appName,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: Center(child: Text(AppConstants.appName)),
+        ),
       ),
     );
   }
