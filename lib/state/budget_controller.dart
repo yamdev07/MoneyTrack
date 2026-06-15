@@ -32,6 +32,12 @@ class BudgetController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Enables/disables carrying the unspent weekly amount to the next week.
+  Future<void> setWeeklyRollover(bool enabled) async {
+    await _repo.save(budget.copyWith(weeklyRollover: enabled));
+    notifyListeners();
+  }
+
   Future<void> resetToDefaults() async {
     await _repo.reset();
     notifyListeners();
