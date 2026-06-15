@@ -32,9 +32,16 @@ class BudgetController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Enables/disables carrying the unspent weekly amount to the next week.
-  Future<void> setWeeklyRollover(bool enabled) async {
-    await _repo.save(budget.copyWith(weeklyRollover: enabled));
+  /// Chooses what happens with the weekly surplus (none / rollover / savings).
+  Future<void> setSurplusMode(WeeklySurplusMode mode) async {
+    await _repo.save(budget.copyWith(surplusMode: mode));
+    notifyListeners();
+  }
+
+  /// Records that the surplus up to [weekStart] has been swept into savings,
+  /// so it is no longer offered for transfer.
+  Future<void> markSurplusSwept(DateTime weekStart) async {
+    await _repo.save(budget.copyWith(lastSweepWeekStart: weekStart));
     notifyListeners();
   }
 
