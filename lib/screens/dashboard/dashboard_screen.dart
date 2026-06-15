@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/alerts.dart';
 import '../../core/app_colors.dart';
+import '../../core/budget_calculator.dart';
 import '../../core/money.dart';
+import '../../state/budget_controller.dart';
 import '../../state/expense_controller.dart';
 import '../../state/profile_controller.dart';
 import '../../state/savings_controller.dart';
+import '../../widgets/alert_banner.dart';
 import '../../widgets/amount_input_dialog.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/section_title.dart';
@@ -34,12 +38,26 @@ class DashboardScreen extends StatelessWidget {
     final profile = context.watch<ProfileController>();
     final expenses = context.watch<ExpenseController>();
     final savings = context.watch<SavingsController>();
+    final budget = context.watch<BudgetController>().budget;
 
     final currency = profile.currency;
     final salary = profile.salary;
     final spent = expenses.monthTotal;
     final remaining = salary - spent;
     final saved = savings.saved;
+
+    final calc = BudgetCalculator(
+      salary: salary,
+      budget: budget,
+      spentByCategory: expenses.monthByCategory(),
+    );
+    final alerts = profile.hasSalary
+        ? AlertService.build(
+            calc: calc,
+            weeklySpent: expenses.weekTotal,
+            currency: currency,
+          )
+        : const <BudgetAlert>[];
 
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +73,7 @@ class DashboardScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
         children: [
+          ...alerts.map((a) => AlertBanner(alert: a)),
           if (!profile.hasSalary)
             _SalaryCta(onTap: () => _promptSalary(context))
           else
