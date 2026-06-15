@@ -10,7 +10,7 @@ import 'data/profile_repository.dart';
 import 'data/savings_repository.dart';
 import 'state/budget_controller.dart';
 import 'state/expense_controller.dart';
-import 'screens/home/home_shell.dart';
+import 'screens/splash/splash_screen.dart';
 import 'state/profile_controller.dart';
 import 'state/savings_controller.dart';
 
@@ -46,7 +46,7 @@ class MoneyTrackApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        home: const HomeShell(),
+        home: const SplashScreen(),
       ),
     );
   }
