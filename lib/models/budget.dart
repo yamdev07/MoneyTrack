@@ -2,6 +2,18 @@ import 'package:hive/hive.dart';
 
 import 'expense_category.dart';
 
+/// What to do with the money left unspent at the end of a week.
+enum WeeklySurplusMode {
+  /// Keep a fixed weekly budget; the surplus is just ignored.
+  none,
+
+  /// Carry the surplus (or deficit) over to the next week's allowance.
+  rollover,
+
+  /// Make the surplus available to transfer into the savings goal.
+  savings,
+}
+
 /// Monthly budget split across categories, expressed as percentages of salary.
 ///
 /// Percentages are stored per [ExpenseCategory.id]. They do not have to sum to
@@ -11,7 +23,8 @@ class Budget extends HiveObject {
     required this.percentages,
     this.savingsPercent = 10,
     this.weeklyBudget = 0,
-    this.weeklyRollover = false,
+    this.surplusMode = WeeklySurplusMode.none,
+    this.lastSweepWeekStart,
   });
 
   /// categoryId -> percentage of salary (0..100).
@@ -26,11 +39,16 @@ class Budget extends HiveObject {
   /// allocation. Any value `> 0` overrides that and is used as-is.
   final double weeklyBudget;
 
-  /// When true, the unspent (or overspent) amount of past weeks carries over to
-  /// the current week's allowance.
-  final bool weeklyRollover;
+  /// User's choice for the weekly leftover (report vs savings vs nothing).
+  final WeeklySurplusMode surplusMode;
+
+  /// Monday of the last week already swept into savings (savings mode only).
+  /// Surplus before this date has been moved out and must not be counted again.
+  final DateTime? lastSweepWeekStart;
 
   bool get hasManualWeeklyBudget => weeklyBudget > 0;
+  bool get isRollover => surplusMode == WeeklySurplusMode.rollover;
+  bool get isSavingsMode => surplusMode == WeeklySurplusMode.savings;
 
   double percentFor(ExpenseCategory category) => percentages[category.id] ?? 0;
 
@@ -42,13 +60,15 @@ class Budget extends HiveObject {
     Map<int, double>? percentages,
     double? savingsPercent,
     double? weeklyBudget,
-    bool? weeklyRollover,
+    WeeklySurplusMode? surplusMode,
+    DateTime? lastSweepWeekStart,
   }) {
     return Budget(
       percentages: percentages ?? Map<int, double>.from(this.percentages),
       savingsPercent: savingsPercent ?? this.savingsPercent,
       weeklyBudget: weeklyBudget ?? this.weeklyBudget,
-      weeklyRollover: weeklyRollover ?? this.weeklyRollover,
+      surplusMode: surplusMode ?? this.surplusMode,
+      lastSweepWeekStart: lastSweepWeekStart ?? this.lastSweepWeekStart,
     );
   }
 
