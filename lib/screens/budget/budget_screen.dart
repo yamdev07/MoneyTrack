@@ -78,9 +78,8 @@ class BudgetScreen extends StatelessWidget {
     );
     final rows = calc.categories();
     final weeklySpent = expenses.weekTotal;
-    final weeklyRatio = calc.weeklyBudgetTotal > 0
-        ? weeklySpent / calc.weeklyBudgetTotal
-        : 0.0;
+    final weeklyRatio =
+        calc.weeklyBudgetTotal > 0 ? weeklySpent / calc.weeklyBudgetTotal : 0.0;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Budget')),

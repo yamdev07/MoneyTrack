@@ -31,7 +31,8 @@ void main() {
     });
 
     test('startOfMonth zeroes the day', () {
-      expect(DateHelpers.startOfMonth(DateTime(2024, 6, 18)), DateTime(2024, 6));
+      expect(
+          DateHelpers.startOfMonth(DateTime(2024, 6, 18)), DateTime(2024, 6));
     });
   });
 }

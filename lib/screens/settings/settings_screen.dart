@@ -69,7 +69,8 @@ class SettingsScreen extends StatelessWidget {
                   leading: const Icon(Icons.payments_outlined,
                       color: AppColors.primary),
                   title: const Text('Salaire mensuel'),
-                  subtitle: Text(Money.format(profile.salary, profile.currency)),
+                  subtitle:
+                      Text(Money.format(profile.salary, profile.currency)),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => _editSalary(context),
                 ),
@@ -84,8 +85,7 @@ class SettingsScreen extends StatelessWidget {
                         : AppConstants.currencies.first,
                     underline: const SizedBox.shrink(),
                     items: AppConstants.currencies
-                        .map((c) =>
-                            DropdownMenuItem(value: c, child: Text(c)))
+                        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                         .toList(),
                     onChanged: (value) {
                       if (value != null) profile.setCurrency(value);
@@ -102,16 +102,17 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.restart_alt,
-                      color: AppColors.warning),
+                  leading:
+                      const Icon(Icons.restart_alt, color: AppColors.warning),
                   title: const Text('Réinitialiser le budget'),
                   subtitle: const Text('Revenir à la répartition par défaut'),
-                  onTap: () => context.read<BudgetController>().resetToDefaults(),
+                  onTap: () =>
+                      context.read<BudgetController>().resetToDefaults(),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(Icons.delete_outline,
-                      color: AppColors.danger),
+                  leading:
+                      const Icon(Icons.delete_outline, color: AppColors.danger),
                   title: const Text('Effacer toutes les dépenses'),
                   onTap: () => _confirmClear(context),
                 ),

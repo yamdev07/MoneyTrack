@@ -48,7 +48,8 @@ class SavingsScreen extends StatelessWidget {
             children: [
               TextField(
                 controller: labelController,
-                decoration: const InputDecoration(labelText: 'Nom de l\'objectif'),
+                decoration:
+                    const InputDecoration(labelText: 'Nom de l\'objectif'),
               ),
               const SizedBox(height: 12),
               TextField(

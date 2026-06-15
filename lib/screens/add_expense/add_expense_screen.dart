@@ -84,7 +84,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             ListTile(
               onTap: _pickDate,
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.calendar_today, color: AppColors.primary),
+              leading:
+                  const Icon(Icons.calendar_today, color: AppColors.primary),
               title: Text(DateHelpers.formatDay(_date)),
               trailing: const Icon(Icons.chevron_right),
             ),

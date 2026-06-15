@@ -27,7 +27,8 @@ class SavingsGoal extends HiveObject {
     return (savedAmount / targetAmount).clamp(0.0, 1.0);
   }
 
-  double get remaining => (targetAmount - savedAmount).clamp(0, double.infinity);
+  double get remaining =>
+      (targetAmount - savedAmount).clamp(0, double.infinity);
 
   bool get isReached => savedAmount >= targetAmount && targetAmount > 0;
 
@@ -45,5 +46,6 @@ class SavingsGoal extends HiveObject {
     );
   }
 
-  static SavingsGoal empty() => SavingsGoal(label: 'Mon épargne', targetAmount: 0);
+  static SavingsGoal empty() =>
+      SavingsGoal(label: 'Mon épargne', targetAmount: 0);
 }

@@ -59,8 +59,7 @@ class BudgetCalculator {
   }
 
   /// Total monthly money allocated to spending categories.
-  double get monthlyBudgetTotal =>
-      salary * budget.totalAllocatedPercent / 100;
+  double get monthlyBudgetTotal => salary * budget.totalAllocatedPercent / 100;
 
   double get weeklyBudgetTotal =>
       monthlyBudgetTotal / AppConstants.weeksPerMonth;

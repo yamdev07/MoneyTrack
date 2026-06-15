@@ -51,9 +51,11 @@ class BalanceHeader extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              _MiniStat(label: 'Salaire', value: Money.compact(salary, currency)),
+              _MiniStat(
+                  label: 'Salaire', value: Money.compact(salary, currency)),
               const SizedBox(width: 24),
-              _MiniStat(label: 'Dépensé', value: Money.compact(spent, currency)),
+              _MiniStat(
+                  label: 'Dépensé', value: Money.compact(spent, currency)),
             ],
           ),
         ],
@@ -73,7 +75,8 @@ class _MiniStat extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+        Text(label,
+            style: const TextStyle(color: Colors.white70, fontSize: 12)),
         const SizedBox(height: 2),
         Text(
           value,
