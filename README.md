@@ -45,8 +45,9 @@ pipeline **Codemagic** (`codemagic.yaml`) qui build sur des machines macOS dans
 le cloud :
 
 1. Connecte ce dépôt sur [codemagic.io](https://codemagic.io)
-2. Lance le workflow **iOS (unsigned build)** pour un build de test
-3. Pour TestFlight/App Store, active la signature (bloc commenté en bas du yaml)
+2. Lance le workflow **iOS (unsigned build)** pour un build de test (simulateur)
+3. Pour installer sur un iPhone via **TestFlight**, utilise le workflow
+   **iOS release** — guide complet : [docs/IOS_DEPLOY.md](docs/IOS_DEPLOY.md)
 
 ## 🧪 Qualité
 
