@@ -1,0 +1,58 @@
+# Codemagic CI/CD — builds MoneyTrack for iOS (and Android) from Windows.
+#
+# Because iOS apps cannot be compiled on Windows, this pipeline runs on
+# Codemagic's macOS machines. The default `ios-unsigned` workflow produces an
+# .app you can run in the simulator / inspect without an Apple Developer account.
+# To ship to a device or TestFlight, add code signing (see the commented block).
+
+workflows:
+  ios-unsigned:
+    name: iOS (unsigned build)
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Flutter packages get
+        script: flutter pub get
+      - name: Analyze
+        script: flutter analyze
+      - name: Test
+        script: flutter test
+      - name: Build iOS (no codesign)
+        script: flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/iphoneos/*.app
+      - flutter_drive.log
+
+  android:
+    name: Android (APK)
+    instance_type: linux_x2
+    max_build_duration: 30
+    environment:
+      flutter: stable
+    scripts:
+      - name: Flutter packages get
+        script: flutter pub get
+      - name: Build APK
+        script: flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+
+# --- To produce a signed IPA for TestFlight, replace ios-unsigned with: ---
+#  ios-release:
+#    name: iOS (App Store)
+#    instance_type: mac_mini_m2
+#    integrations:
+#      app_store_connect: CodemagicApiKey
+#    environment:
+#      ios_signing:
+#        distribution_type: app_store
+#        bundle_identifier: com.drwintech.moneytrack
+#      flutter: stable
+#    scripts:
+#      - flutter pub get
+#      - flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+#    artifacts:
+#      - build/ios/ipa/*.ipa
