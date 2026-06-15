@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'core/app_constants.dart';
@@ -37,6 +38,13 @@ class MoneyTrackApp extends StatelessWidget {
         title: AppConstants.appName,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
+        locale: const Locale('fr', 'FR'),
+        supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         home: const Scaffold(
           body: Center(child: Text(AppConstants.appName)),
         ),
