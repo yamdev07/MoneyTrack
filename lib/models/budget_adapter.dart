@@ -19,16 +19,19 @@ class BudgetAdapter extends TypeAdapter<Budget> {
         (key, value) => MapEntry(key as int, (value as num).toDouble()),
       ),
       savingsPercent: (fields[1] as num?)?.toDouble() ?? 10,
+      weeklyBudget: (fields[2] as num?)?.toDouble() ?? 0,
     );
   }
 
   @override
   void write(BinaryWriter writer, Budget obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.percentages)
       ..writeByte(1)
-      ..write(obj.savingsPercent);
+      ..write(obj.savingsPercent)
+      ..writeByte(2)
+      ..write(obj.weeklyBudget);
   }
 }
