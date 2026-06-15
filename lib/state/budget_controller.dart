@@ -24,6 +24,14 @@ class BudgetController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Sets a manual weekly budget. Pass `0` to go back to the automatic value.
+  Future<void> setWeeklyBudget(double amount) async {
+    await _repo.save(
+      budget.copyWith(weeklyBudget: amount.clamp(0, double.infinity).toDouble()),
+    );
+    notifyListeners();
+  }
+
   Future<void> resetToDefaults() async {
     await _repo.reset();
     notifyListeners();
