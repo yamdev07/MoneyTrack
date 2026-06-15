@@ -53,5 +53,26 @@ void main() {
       );
       expect(calc.monthlySavingsTarget, 15000);
     });
+
+    test('manual weekly budget overrides the derived value', () {
+      final manual = budget.copyWith(weeklyBudget: 20000);
+      final calc = BudgetCalculator(
+        salary: 100000,
+        budget: manual,
+        spentByCategory: const {},
+      );
+      expect(manual.hasManualWeeklyBudget, isTrue);
+      expect(calc.weeklyBudgetTotal, 20000);
+    });
+
+    test('weekly budget works even without a salary when set manually', () {
+      final manual = budget.copyWith(weeklyBudget: 15000);
+      final calc = BudgetCalculator(
+        salary: 0,
+        budget: manual,
+        spentByCategory: const {},
+      );
+      expect(calc.weeklyBudgetTotal, 15000);
+    });
   });
 }
