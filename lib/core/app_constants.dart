@@ -20,5 +20,12 @@ class AppConstants {
   static const double weeksPerMonth = 4.345;
 
   /// Currencies offered in settings.
-  static const List<String> currencies = ['FCFA', '€', '\$', 'CHF', 'MAD', 'DH'];
+  static const List<String> currencies = [
+    'FCFA',
+    '€',
+    '\$',
+    'CHF',
+    'MAD',
+    'DH'
+  ];
 }

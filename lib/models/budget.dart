@@ -15,8 +15,7 @@ class Budget extends HiveObject {
   /// Percentage of salary automatically earmarked for savings.
   final double savingsPercent;
 
-  double percentFor(ExpenseCategory category) =>
-      percentages[category.id] ?? 0;
+  double percentFor(ExpenseCategory category) => percentages[category.id] ?? 0;
 
   /// Total percentage allocated to spending categories (excludes savings).
   double get totalAllocatedPercent =>

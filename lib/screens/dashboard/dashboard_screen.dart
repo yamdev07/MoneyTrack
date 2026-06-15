@@ -148,7 +148,8 @@ class _SalaryCta extends StatelessWidget {
     return Card(
       child: ListTile(
         onTap: onTap,
-        leading: const Icon(Icons.add_circle, color: AppColors.primary, size: 32),
+        leading:
+            const Icon(Icons.add_circle, color: AppColors.primary, size: 32),
         title: const Text('Ajoute ton salaire mensuel'),
         subtitle: const Text('Pour calculer ton budget et ton reste'),
         trailing: const Icon(Icons.chevron_right),

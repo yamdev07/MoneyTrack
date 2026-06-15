@@ -24,7 +24,8 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProfile({String? name, double? salary, String? currency}) async {
+  Future<void> updateProfile(
+      {String? name, double? salary, String? currency}) async {
     final updated = profile.copyWith(
       name: name,
       monthlySalary: salary,

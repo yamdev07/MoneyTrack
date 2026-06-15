@@ -13,7 +13,10 @@ class SavingsController extends ChangeNotifier {
   double get saved => goal.savedAmount;
   double get progress => goal.progress;
 
-  Future<void> setGoal({required String label, required double target, DateTime? deadline}) async {
+  Future<void> setGoal(
+      {required String label,
+      required double target,
+      DateTime? deadline}) async {
     final updated = goal.copyWith(
       label: label,
       targetAmount: target,

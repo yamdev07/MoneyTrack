@@ -54,7 +54,9 @@ class SpendingChart extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Total', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                  const Text('Total',
+                      style: TextStyle(
+                          fontSize: 11, color: AppColors.textSecondary)),
                   Text(
                     Money.compact(total, currency),
                     style: const TextStyle(
