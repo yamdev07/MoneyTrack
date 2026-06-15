@@ -17,7 +17,7 @@ class CategoryAvatar extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: style.color.withOpacity(0.14),
+        color: style.color.withAlpha(36),
         shape: BoxShape.circle,
       ),
       child: Icon(style.icon, color: style.color, size: size * 0.5),

@@ -37,9 +37,9 @@ class AlertBanner extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: _color.withOpacity(0.10),
+        color: _color.withAlpha(26),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: _color.withOpacity(0.4)),
+        border: Border.all(color: _color.withAlpha(102)),
       ),
       child: Row(
         children: [
