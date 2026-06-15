@@ -1,9 +1,12 @@
 # Codemagic CI/CD — builds MoneyTrack for iOS (and Android) from Windows.
 #
-# Because iOS apps cannot be compiled on Windows, this pipeline runs on
-# Codemagic's macOS machines. The default `ios-unsigned` workflow produces an
-# .app you can run in the simulator / inspect without an Apple Developer account.
-# To ship to a device or TestFlight, add code signing (see the commented block).
+# iOS apps cannot be compiled on Windows, so these pipelines run on Codemagic's
+# macOS machines. See docs/IOS_DEPLOY.md for the full setup walkthrough.
+#
+# Workflows:
+#   ios-unsigned  -> build for the simulator, no Apple account needed (quick check)
+#   ios-release   -> signed .ipa published to TestFlight (needs Apple Developer)
+#   android       -> release APK
 
 workflows:
   ios-unsigned:
@@ -24,7 +27,43 @@ workflows:
         script: flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.app
-      - flutter_drive.log
+
+  ios-release:
+    name: iOS release (TestFlight)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      # Name of the App Store Connect API key you upload in the Codemagic UI
+      # (Teams/Personal account -> Integrations -> Apple Developer Portal).
+      app_store_connect: CodemagicApiKey
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.drwintech.moneytrack
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Flutter packages get
+        script: flutter pub get
+      - name: Set up provisioning profiles
+        script: xcode-project use-profiles
+      - name: Flutter analyze
+        script: flutter analyze --no-fatal-infos
+      - name: Flutter test
+        script: flutter test
+      - name: Build signed IPA
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        # Sends the build to TestFlight. Flip to false to only produce the IPA.
+        submit_to_testflight: true
 
   android:
     name: Android (APK)
@@ -39,20 +78,3 @@ workflows:
         script: flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
-
-# --- To produce a signed IPA for TestFlight, replace ios-unsigned with: ---
-#  ios-release:
-#    name: iOS (App Store)
-#    instance_type: mac_mini_m2
-#    integrations:
-#      app_store_connect: CodemagicApiKey
-#    environment:
-#      ios_signing:
-#        distribution_type: app_store
-#        bundle_identifier: com.drwintech.moneytrack
-#      flutter: 3.22.1
-#    scripts:
-#      - flutter pub get
-#      - flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
-#    artifacts:
-#      - build/ios/ipa/*.ipa
